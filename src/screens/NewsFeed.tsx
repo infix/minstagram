@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Spinner } from "@ui-kitten/components";
-import { fetchPosts } from "../slices/postSlice";
+import { Layout, Spinner } from "@ui-kitten/components";
+import { fetchPosts, Post as PostType } from "../slices/postSlice";
+import { Post } from "../components/Post";
 
 export const NewsFeed = () => {
+  // @ts-ignore
   const data = useSelector(state => state.post);
   const { loading, posts } = data;
   const dispatch = useDispatch()
@@ -30,5 +32,9 @@ export const NewsFeed = () => {
     )
   }
 
-  return (<Text>News Feed</Text>)
+  return (
+    <Layout level={"2"}>
+      {posts.map((post: PostType) => <Post {...post} key={post.date} />)}
+    </Layout>
+  )
 }

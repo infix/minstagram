@@ -12,7 +12,7 @@ const fetchPosts = createAsyncThunk(
   }
 )
 
-interface Post {
+export interface Post {
   author: {
     name: string;
     avatar: string;
