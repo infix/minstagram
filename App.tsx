@@ -7,7 +7,7 @@ import { SignInScreen } from "./src/screens/SignIn";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./src/store";
-import { HomeScreen } from "./src/screens/Home";
+import { NewsFeed } from "./src/screens/NewsFeed";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const AuthStack = createStackNavigator();
@@ -21,7 +21,7 @@ const HomeTabs = createBottomTabNavigator();
 
 const HomeNavigator = () => (
   <HomeTabs.Navigator>
-    <HomeTabs.Screen name={"Home"} component={HomeScreen} />
+    <HomeTabs.Screen name={"NewsFeed"} component={NewsFeed} />
   </HomeTabs.Navigator>
 )
 
@@ -34,7 +34,7 @@ const RootStackNavigator: React.FC = () => {
   return (
     <RootStack.Navigator>
       {loggedIn ?
-        <RootStack.Screen name="Home" component={HomeNavigator} /> :
+        <RootStack.Screen name="NewsFeed" component={HomeNavigator} /> :
         <RootStack.Screen name="Sign In" component={AuthStackNavigator} options={{ headerShown: false }} />
       }
     </RootStack.Navigator>

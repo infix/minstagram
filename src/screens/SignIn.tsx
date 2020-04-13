@@ -15,12 +15,11 @@ export const SignInScreen: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-
   // @ts-ignore
   const { error, loggedIn, loading } = useSelector(state => state.auth);
 
   if (loggedIn) {
-    navigation.navigate('Home')
+    navigation.navigate('NewsFeed')
     return null
   }
 
