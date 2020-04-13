@@ -1,26 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import * as eva from "@eva-design/eva"
-import { ApplicationProvider, Button } from "@ui-kitten/components";
+import { ApplicationProvider } from "@ui-kitten/components";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { SignInScreen } from "./src/screens/SignIn";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
-      <View style={styles.container}>
-        <Text>Open up App.tsx to start working on your app!</Text>
-        <Button onPress={() => {}}>
-          BUTTON
-        </Button>
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name={"Sign In"} component={SignInScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </ApplicationProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
