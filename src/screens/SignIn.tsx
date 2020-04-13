@@ -1,11 +1,33 @@
 import { Button, Icon, Input, Layout } from "@ui-kitten/components";
-import React, { useRef } from "react";
-import { Image, TouchableWithoutFeedback } from "react-native";
+import React, { useRef, useState } from "react";
+import { ActivityIndicator, Image, TouchableWithoutFeedback } from "react-native";
 import { Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { loginThunk } from "../slices/authSlice";
+import { useNavigation } from "@react-navigation/native";
 
-export const SignInScreen = () => {
+export const SignInScreen: React.FC = () => {
   const passwordRef = useRef<any>(null)
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+  const dispatch = useDispatch();
+  const navigation = useNavigation()
+  const formikRef = useRef(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+
+  // @ts-ignore
+  const { error, loggedIn, loading } = useSelector(state => state.auth);
+
+  if (loggedIn) {
+    navigation.navigate('Home')
+    return null
+  }
+
+  if (!loading && isSubmitting) {
+    // @ts-ignore
+    formikRef.current?.setSubmitting(false)
+  }
 
   const toggleSecureEntry = () =>
     setSecureTextEntry(secureTextEntry => !secureTextEntry);
@@ -16,7 +38,11 @@ export const SignInScreen = () => {
     </TouchableWithoutFeedback>
   );
 
-  const handleSubmit = () => {}
+  // @ts-ignore
+  const handleSubmit = ({ email, password }) => {
+    dispatch(loginThunk({ email, password }))
+    setIsSubmitting(true)
+  }
 
   return (
     <Layout style={{ height: '100%' }}>
@@ -25,7 +51,8 @@ export const SignInScreen = () => {
         <Image style={{ alignSelf: 'center', aspectRatio: 4, height: 80, marginTop: 24 }}
                source={require('../../assets/minstagram-logo.png')} />
 
-        <Formik initialValues={{ email: '', password: '' }} onSubmit={handleSubmit}>
+        <Formik innerRef={instance => formikRef.current = instance} onSubmit={handleSubmit}
+                initialValues={{ email: '', password: '' }}>
           {({ values, handleChange, submitForm }) => (
             <>
               <Input
@@ -50,9 +77,13 @@ export const SignInScreen = () => {
                 secureTextEntry={secureTextEntry}
               />
 
-              <Button style={{ backgroundColor: "#F95E62" }}
-                      onPress={submitForm}>
-                Login
+              <Button
+                accessoryRight={evaProps => (loading ?
+                  <ActivityIndicator {...evaProps} color={"white"} /> : <></>)}
+                style={{ backgroundColor: "#F95E62" }}
+                disabled={false}
+                onPress={submitForm}>
+                {loading ? "" : "Login"}
               </Button>
             </>
           )}
