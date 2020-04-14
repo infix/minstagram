@@ -1,22 +1,25 @@
-import React, { useEffect } from "react";
-import { ScrollView, Text, View } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout, Spinner } from "@ui-kitten/components";
 import { fetchPosts, Post as PostType } from "../slices/postSlice";
 import { Post } from "../components/Post";
+import { isCloseToBottom } from "../utils";
 
 export const NewsFeed = () => {
   // @ts-ignore
-  const data = useSelector(state => state.post);
-  const { loading, posts } = data;
+  const { loading, posts } = useSelector(state => state.post);
   const dispatch = useDispatch()
 
-  // fetch initial posts
-  useEffect(() => {
-    dispatch(fetchPosts({}))
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (isCloseToBottom(e.nativeEvent, 20) && !loading) {
+      dispatch(fetchPosts())
+    }
   }, [])
 
-  if (loading) {
+  useEffect(() => { dispatch(fetchPosts()) }, [])
+
+  if (!posts.length && loading) {
     return (
       <View style={{ alignSelf: "center", justifyContent: "center", height: "100%" }}>
         <Spinner size="large" />
@@ -34,8 +37,11 @@ export const NewsFeed = () => {
 
   return (
     <Layout level={"2"}>
-      <ScrollView>
-        {posts.map((post: PostType) => <Post {...post} key={post.date} />)}
+      <ScrollView onScroll={handleScroll}>
+        {posts.map((post: PostType, i) => <Post {...post} key={post.date + i} />)}
+        <View style={{ alignSelf: "center", marginVertical: 12 }}>
+          <Spinner size="large" />
+        </View>
       </ScrollView>
     </Layout>
   )
