@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout, Spinner } from "@ui-kitten/components";
 import { fetchPosts, Post as PostType } from "../slices/postSlice";
@@ -34,7 +34,9 @@ export const NewsFeed = () => {
 
   return (
     <Layout level={"2"}>
-      {posts.map((post: PostType) => <Post {...post} key={post.date} />)}
+      <ScrollView>
+        {posts.map((post: PostType) => <Post {...post} key={post.date} />)}
+      </ScrollView>
     </Layout>
   )
 }
