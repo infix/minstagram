@@ -6,7 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { SignInScreen } from "./src/screens/SignIn";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { Provider } from "react-redux";
-import { store } from "./src/store";
+import { createStore } from "./src/store";
 import { NewsFeed } from "./src/screens/NewsFeed";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Profile } from "./src/screens/Profile";
@@ -86,7 +86,7 @@ export default function App() {
     return <AppLoading />
 
   return (
-    <Provider store={store}>
+    <Provider store={createStore()}>
       <IconRegistry icons={EvaIconsPack} />
 
       <ApplicationProvider {...eva} theme={eva.light}>

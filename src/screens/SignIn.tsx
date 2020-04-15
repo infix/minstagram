@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { ActivityIndicator, Alert, Image, TouchableWithoutFeedback } from "react-native";
 import { Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { loginThunk } from "../slices/authSlice";
+import { LoginAction } from "../slices/authSlice";
 import { useNavigation } from "@react-navigation/native";
 
 export const SignInScreen: React.FC = () => {
@@ -43,7 +43,7 @@ export const SignInScreen: React.FC = () => {
 
   // @ts-ignore
   const handleSubmit = ({ email, password }) => {
-    dispatch(loginThunk({ email, password }))
+    dispatch(LoginAction({ email, password }))
     setIsSubmitting(true)
   }
 
