@@ -27,7 +27,7 @@ export interface Post {
 
 const postSlice = createSlice({
   name: 'post',
-  initialState: { posts: [], loading: false, page: 1 },
+  initialState: { posts: [], loading: false, page: 1, error: false },
   reducers: {
     setLoading: (state) => {
       state.loading = true
@@ -39,12 +39,17 @@ const postSlice = createSlice({
       return {
         posts: state.posts.concat(action.payload),
         loading: false,
-        page: state.page + 1
+        page: state.page + 1,
+        error: false,
       }
     },
     // @ts-ignore
-    [fetchPosts.rejected]: (state) => {
-      return { ...state, loading: false }
+    [fetchPosts.rejected]: (state, action) => {
+      // still loading
+      if (action.error.message === "loading")
+        return state;
+
+      return { ...state, loading: false, error: true }
     }
   }
 });
