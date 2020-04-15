@@ -7,10 +7,11 @@ import { Post } from "../components/Post";
 import { isCloseToBottom } from "../utils";
 import { FAB } from "../components/FAB";
 import { useNavigation } from "@react-navigation/native";
+import { NewsFeedFooter } from "../components/NewsFeedFooter";
 
 export const NewsFeed = () => {
   // @ts-ignore
-  const { loading, posts, error } = useSelector(state => state.post);
+  const { loading, posts, error, reachedTheEnd } = useSelector(state => state.post);
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -20,6 +21,7 @@ export const NewsFeed = () => {
   }, [])
 
   useEffect(() => { dispatch(fetchPosts()) }, [])
+  const handleNavigate = useCallback(() => navigation.navigate("AddPost"), [navigation]);
 
   if (!posts.length && loading) {
     return (
@@ -33,6 +35,7 @@ export const NewsFeed = () => {
     return (
       <View style={{ alignSelf: "center", justifyContent: "center", height: "100%" }}>
         <Text>Nothing here, why not start by creating a new post!</Text>
+        <Button style={{ marginVertical: 12 }} onPress={handleNavigate}>Create a new Post</Button>
       </View>
     )
   }
@@ -40,20 +43,14 @@ export const NewsFeed = () => {
   return (
     <Layout level={"2"}>
       <ScrollView onScroll={handleScroll}>
-        {posts.map((post: PostType, i) => <Post {...post} key={post.date + i} />)}
-
-        {error ?
-          <View style={{ alignSelf: "center", marginVertical: 12 }}>
-            <Text>Something went wrong :(</Text>
-            <Button style={{ marginVertical: 12 }} onPress={() => dispatch(fetchPosts())}>retry</Button>
-          </View>
-          :
-          <View style={{ alignSelf: "center", marginVertical: 12 }}>
-            <Spinner size="large" />
-          </View>
-        }
+        {posts.map((post: PostType) => <Post {...post} key={post.id} />)}
+        <NewsFeedFooter
+          loading={loading} error={error} reachedTheEnd={reachedTheEnd}
+          onRetry={() => dispatch(fetchPosts())}
+        />
       </ScrollView>
-      <FAB onPress={() => navigation.navigate("AddPost")} />
+
+      <FAB onPress={handleNavigate} />
     </Layout>
   )
 }
