@@ -11,7 +11,7 @@ const fetchPosts = createAsyncThunk(
 
     thunkAPI.dispatch(setLoading())
 
-    const response = await axios.get(`http://192.168.1.36:3001/posts?_page=${post.page}&_limit=5`);
+    const response = await axios.get(`http://192.168.1.36:3001/posts?_page=${post.page}&_limit=5&_sort=date&_order=desc`);
     return response.data;
   }
 )
@@ -45,6 +45,7 @@ export const addNewPost = createAsyncThunk(
 
 
 export interface Post {
+  id: number,
   author: {
     name: string;
     avatar: string;
