@@ -31,11 +31,26 @@ const loadPlaces = createAsyncThunk(
   }
 )
 
+export const removePlace = createAsyncThunk(
+  "bucketList/remove",
+  async ({ name }: { name: string }) => {
+    const placesString = await AsyncStorage.getItem(BUCKET_LIST_PLACES);
+    const places: string[] = placesString ? JSON.parse(placesString) : [];
+    const newPlaces = places.filter(place => place !== name)
+    await AsyncStorage.setItem(BUCKET_LIST_PLACES, JSON.stringify(newPlaces));
+    return newPlaces;
+  }
+)
+
 const bucketListSlice = createSlice({
   name: 'bucketList',
   initialState: { places: [], errorMessage: '' },
   reducers: {},
   extraReducers: {
+    [removePlace.fulfilled as any](state, action) {
+      console.log("Removing: ", action.payload)
+      return { ...state, places: action.payload }
+    },
     // @ts-ignore
     [loadPlaces.fulfilled](state, action) {
       return { ...state, places: action.payload }
