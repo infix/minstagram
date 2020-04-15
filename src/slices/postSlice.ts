@@ -57,7 +57,7 @@ export interface Post {
 
 const postSlice = createSlice({
   name: 'post',
-  initialState: { posts: [], loading: false, page: 1, error: false },
+  initialState: { posts: [], loading: false, page: 1, error: false, reachedTheEnd: false },
   reducers: {
     setLoading: (state) => {
       state.loading = true
@@ -84,6 +84,7 @@ const postSlice = createSlice({
         loading: false,
         page: state.page + 1,
         error: false,
+        reachedTheEnd: action.payload.length === 0
       }
     },
     // @ts-ignore
