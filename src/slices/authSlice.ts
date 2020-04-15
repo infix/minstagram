@@ -8,8 +8,13 @@ const loginThunk = createAsyncThunk(
   "auth/login",
   async ({ email, password }: LoginPayload, thunkAPI) => {
     thunkAPI.dispatch(setLoading())
-    const response = await axios.post(`http://192.168.1.36:3001/login`, { email, password });
-    return response.data;
+    try {
+      const response = await axios.post(`http://192.168.1.36:3001/login`, { email, password });
+      return response.data;
+    } catch (e) {
+      // this is pretty ugly
+      throw e?.response?.data?.message ?? e
+    }
   }
 )
 
@@ -28,8 +33,8 @@ const authSlice = createSlice({
       return { ...state, error: '', loggedIn: true, loading: false }
     },
     // @ts-ignore
-    [loginThunk.rejected]: (state) => {
-      return { ...state, error: "Check your user name or password", loading: false }
+    [loginThunk.rejected]: (state, action) => {
+      return { ...state, error: action.error.message, loading: false }
     }
   }
 });

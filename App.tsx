@@ -18,7 +18,7 @@ import { AsyncStorage } from "react-native";
 const AuthStack = createStackNavigator();
 
 const AuthStackNavigator = () => (
-  <AuthStack.Navigator>
+  <AuthStack.Navigator headerMode="none">
     <AuthStack.Screen name={"Sign In"} component={SignInScreen} />
   </AuthStack.Navigator>
 )

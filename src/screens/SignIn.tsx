@@ -1,6 +1,6 @@
 import { Button, Icon, Input, Layout } from "@ui-kitten/components";
 import React, { useRef, useState } from "react";
-import { ActivityIndicator, Image, TouchableWithoutFeedback } from "react-native";
+import { ActivityIndicator, Alert, Image, TouchableWithoutFeedback } from "react-native";
 import { Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { loginThunk } from "../slices/authSlice";
@@ -28,6 +28,10 @@ export const SignInScreen: React.FC = () => {
     formikRef.current?.setSubmitting(false)
   }
 
+  if (error) {
+    Alert.alert("Error", error)
+  }
+
   const toggleSecureEntry = () =>
     setSecureTextEntry(secureTextEntry => !secureTextEntry);
 
@@ -44,7 +48,7 @@ export const SignInScreen: React.FC = () => {
   }
 
   return (
-    <Layout style={{ height: '100%' }}>
+    <Layout style={{ height: '100%', paddingTop: 120 }}>
       <Layout style={{ marginHorizontal: 20, marginTop: 20 }}>
 
         <Image style={{ alignSelf: 'center', aspectRatio: 4, height: 80, marginTop: 24 }}
