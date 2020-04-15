@@ -1,7 +1,7 @@
 import { ActivityIndicator, View } from "react-native";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "../slices/userSlice";
+import { getProfileAction, getProfileSaga } from "../slices/userSlice";
 import { Avatar, Button, Divider, Layout, Spinner, Text } from "@ui-kitten/components";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,7 +10,7 @@ export const Profile: React.FC = () => {
   // @ts-ignore
   const { loading, profile, error } = useSelector(state => state.user)
 
-  useEffect(() => { dispatch(getProfile()) }, []);
+  useEffect(() => { dispatch(getProfileAction()) }, []);
 
   if (!profile || loading && !error) {
     return (
@@ -28,7 +28,7 @@ export const Profile: React.FC = () => {
       <SafeAreaView>
         <View style={{ alignSelf: "center", justifyContent: "center", height: "100%", marginVertical: 12 }}>
           <Text>Something went wrong :(</Text>
-          <Button style={{ marginVertical: 12 }} onPress={() => dispatch(getProfile())}
+          <Button style={{ marginVertical: 12 }} onPress={() => dispatch(getProfileSaga())}
                   accessoryRight={loadingIcon}>retry</Button>
         </View>
       </SafeAreaView>

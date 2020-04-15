@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Button, Layout, Select, SelectItem, Text } from "@ui-kitten/components";
 import { useDispatch, useSelector } from "react-redux";
 import { loadPlaces } from "../slices/bucketListSlice";
-import { getProfile } from "../slices/userSlice";
+import { getProfileAction } from "../slices/userSlice";
 import { addNewPost } from "../slices/postSlice";
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const images: string[] = [
   "https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528_960_720.jpg",
@@ -33,7 +33,7 @@ export const AddPost: React.FC = () => {
     // profile needed to create a post
     // usually this would be handle the by backend
     // but as i'm using json server, I'm just gonna fetch profile
-    if (!profile) dispatch(getProfile())
+    if (!profile) dispatch(getProfileAction())
     if (!places.length) dispatch(loadPlaces())
   }, [])
 
