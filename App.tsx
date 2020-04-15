@@ -1,6 +1,6 @@
 import React from 'react';
 import * as eva from "@eva-design/eva"
-import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
+import { ApplicationProvider, BottomNavigation, BottomNavigationTab, Icon, IconRegistry } from "@ui-kitten/components";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { SignInScreen } from "./src/screens/SignIn";
@@ -9,6 +9,8 @@ import { Provider, useSelector } from "react-redux";
 import { store } from "./src/store";
 import { NewsFeed } from "./src/screens/NewsFeed";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Profile } from "./src/screens/Profile";
+import { BucketList } from "./src/screens/BucketList";
 
 const AuthStack = createStackNavigator();
 
@@ -19,9 +21,21 @@ const AuthStackNavigator = () => (
 )
 const HomeTabs = createBottomTabNavigator();
 
+const BottomTabBar = ({ navigation, state }) => (
+  <BottomNavigation
+    selectedIndex={state.index}
+    onSelect={index => navigation.navigate(state.routeNames[index])}>
+    <BottomNavigationTab title='News Feed' icon={props => <Icon {...props} name='home-outline' />} />
+    <BottomNavigationTab title='Bucket List' icon={props => <Icon {...props} name='archive-outline' />} />
+    <BottomNavigationTab title='Profile' icon={props => <Icon {...props} name='person-outline' />} />
+  </BottomNavigation>
+);
+
 const HomeNavigator = () => (
-  <HomeTabs.Navigator>
+  <HomeTabs.Navigator tabBar={props => <BottomTabBar {...props} />}>
     <HomeTabs.Screen name={"NewsFeed"} component={NewsFeed} />
+    <HomeTabs.Screen name={"BucketList"} component={BucketList} />
+    <HomeTabs.Screen name={"Profile"} component={Profile} />
   </HomeTabs.Navigator>
 )
 
