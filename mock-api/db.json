@@ -1,1 +1,82 @@
-{}
+{
+  "posts": [
+    {
+      "id": 486,
+      "image": "https://cdn.pixabay.com/photo/2017/01/18/21/34/cyprus-1990939_960_720.jpg",
+      "likes": 0,
+      "date": "2020-04-15T20:30:27.331Z",
+      "author": {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "age": "40",
+        "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+      }
+    },
+    {
+      "id": 612,
+      "image": "https://images.pexels.com/photos/37646/new-york-skyline-new-york-city-city-37646.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "likes": 0,
+      "date": "2020-04-15T20:30:37.635Z",
+      "author": {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "age": "40",
+        "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+      }
+    },
+    {
+      "id": 648,
+      "image": "https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528_960_720.jpg",
+      "likes": 0,
+      "date": "2020-04-15T20:30:41.025Z",
+      "author": {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "age": "40",
+        "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+      }
+    },
+    {
+      "id": 490,
+      "image": "https://cdn.pixabay.com/photo/2017/01/18/21/34/cyprus-1990939_960_720.jpg",
+      "likes": 0,
+      "date": "2020-04-15T20:31:27.332Z",
+      "author": {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "age": "40",
+        "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+      }
+    },
+    {
+      "id": 228,
+      "image": "https://images.pexels.com/photos/37646/new-york-skyline-new-york-city-city-37646.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "likes": 0,
+      "date": "2020-04-15T20:31:29.548Z",
+      "author": {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "age": "40",
+        "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+      }
+    },
+    {
+      "id": 828,
+      "image": "https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528_960_720.jpg",
+      "likes": 0,
+      "date": "2020-04-15T20:31:37.988Z",
+      "author": {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+        "age": "40",
+        "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+      }
+    }
+  ],
+  "profile": {
+    "name": "John Doe",
+    "email": "john.doe@gmail.com",
+    "age": "40",
+    "avatar": "https://pbs.twimg.com/media/EIbTXFYXUAAN1Pm.jpg"
+  }
+}
