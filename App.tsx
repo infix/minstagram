@@ -11,6 +11,7 @@ import { NewsFeed } from "./src/screens/NewsFeed";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Profile } from "./src/screens/Profile";
 import { BucketList } from "./src/screens/BucketList";
+import { AddPost } from "./src/screens/AddPost";
 
 const AuthStack = createStackNavigator();
 
@@ -19,24 +20,40 @@ const AuthStackNavigator = () => (
     <AuthStack.Screen name={"Sign In"} component={SignInScreen} />
   </AuthStack.Navigator>
 )
-const HomeTabs = createBottomTabNavigator();
+const ApplicationTabs = createBottomTabNavigator();
 
-const BottomTabBar = ({ navigation, state }) => (
+const bottomTabList = [
+  { title: 'News Feed', icon: 'home-outline' },
+  { title: 'Bucket List', icon: 'archive-outline' },
+  { title: 'Profile', icon: 'person-outline' },
+];
+
+const BottomTabBar = ({ navigation, state }: any) => (
   <BottomNavigation
     selectedIndex={state.index}
     onSelect={index => navigation.navigate(state.routeNames[index])}>
-    <BottomNavigationTab title='News Feed' icon={props => <Icon {...props} name='home-outline' />} />
-    <BottomNavigationTab title='Bucket List' icon={props => <Icon {...props} name='archive-outline' />} />
-    <BottomNavigationTab title='Profile' icon={props => <Icon {...props} name='person-outline' />} />
+    {bottomTabList.map(tab => (
+      <BottomNavigationTab icon={props => <Icon {...props} name={tab.icon} />}
+                           title={tab.title} key={tab.title} />
+    ))}
   </BottomNavigation>
 );
 
-const HomeNavigator = () => (
-  <HomeTabs.Navigator tabBar={props => <BottomTabBar {...props} />}>
-    <HomeTabs.Screen name={"NewsFeed"} component={NewsFeed} />
-    <HomeTabs.Screen name={"BucketList"} component={BucketList} />
-    <HomeTabs.Screen name={"Profile"} component={Profile} />
-  </HomeTabs.Navigator>
+const ApplicationStack = createStackNavigator()
+
+const AppStack = () => (
+  <ApplicationStack.Navigator>
+    <ApplicationStack.Screen name="NewsFeed" component={NewsFeed} options={{ title: "News Feed" }} />
+    <ApplicationStack.Screen name="AddPost" component={AddPost} options={{ title: "Add a Post" }} />
+  </ApplicationStack.Navigator>
+)
+
+const AppTabs = () => (
+  <ApplicationTabs.Navigator tabBar={props => <BottomTabBar {...props} />}>
+    <ApplicationTabs.Screen name="AppStack" component={AppStack} />
+    <ApplicationTabs.Screen name="BucketList" component={BucketList} />
+    <ApplicationTabs.Screen name="Profile" component={Profile} />
+  </ApplicationTabs.Navigator>
 )
 
 const RootStack = createStackNavigator();
@@ -44,12 +61,12 @@ const RootStack = createStackNavigator();
 const RootStackNavigator: React.FC = () => {
   // @ts-ignore
   const loggedIn = useSelector(state => state.auth.loggedIn)
-  console.log("RootNav: ", loggedIn)
+
   return (
-    <RootStack.Navigator>
+    <RootStack.Navigator headerMode="none">
       {loggedIn ?
-        <RootStack.Screen name="NewsFeed" component={HomeNavigator} /> :
-        <RootStack.Screen name="Sign In" component={AuthStackNavigator} options={{ headerShown: false }} />
+        <RootStack.Screen name="AppTabs" component={AppTabs} /> :
+        <RootStack.Screen name="Sign In" component={AuthStackNavigator} />
       }
     </RootStack.Navigator>
   );

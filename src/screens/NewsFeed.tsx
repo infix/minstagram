@@ -5,12 +5,14 @@ import { Button, Layout, Spinner } from "@ui-kitten/components";
 import { fetchPosts, Post as PostType } from "../slices/postSlice";
 import { Post } from "../components/Post";
 import { isCloseToBottom } from "../utils";
+import { FAB } from "../components/FAB";
+import { useNavigation } from "@react-navigation/native";
 
 export const NewsFeed = () => {
   // @ts-ignore
   const { loading, posts, error } = useSelector(state => state.post);
   const dispatch = useDispatch()
-
+  const navigation = useNavigation()
   const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (isCloseToBottom(e.nativeEvent, 20) && !loading && !error) {
       dispatch(fetchPosts())
@@ -51,6 +53,10 @@ export const NewsFeed = () => {
           </View>
         }
       </ScrollView>
+      <FAB onPress={() => {
+        console.log("Navigation: ", Object.keys(navigation))
+        navigation.navigate("AddPost")
+      }} />
     </Layout>
   )
 }

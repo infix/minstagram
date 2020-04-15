@@ -19,7 +19,7 @@ export const SignInScreen: React.FC = () => {
   const { error, loggedIn, loading } = useSelector(state => state.auth);
 
   if (loggedIn) {
-    navigation.navigate('NewsFeed')
+    navigation.navigate('AppTabs', { screen: "NewsFeed" })
     return null
   }
 
