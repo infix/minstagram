@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
+import { BASE_URL } from "../constants";
 
 const getProfile = createAsyncThunk(
   "auth/profile",
   async (arg, thunkAPI) => {
     thunkAPI.dispatch(setLoading())
-    const response = await axios.get(`http://192.168.1.36:3001/profile`);
+    const response = await axios.get(`${BASE_URL}/profile`);
     return response.data;
   }
 )

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
 import { AsyncStorage } from "react-native";
+import { BASE_URL } from "../constants";
 
 type LoginPayload = { email: string, password: string };
 
@@ -9,7 +10,7 @@ const loginThunk = createAsyncThunk(
   async ({ email, password }: LoginPayload, thunkAPI) => {
     thunkAPI.dispatch(setLoading())
     try {
-      const response = await axios.post(`http://192.168.1.36:3001/login`, { email, password });
+      const response = await axios.post(`${BASE_URL}/login`, { email, password });
       return response.data;
     } catch (e) {
       // this is pretty ugly

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
 import { removePlace } from "./bucketListSlice";
+import { BASE_URL } from "../constants";
 
 const fetchPosts = createAsyncThunk(
   "post/fetch",
@@ -11,7 +12,7 @@ const fetchPosts = createAsyncThunk(
 
     thunkAPI.dispatch(setLoading())
 
-    const response = await axios.get(`http://192.168.1.36:3001/posts?_page=${post.page}&_limit=5&_sort=date&_order=desc`);
+    const response = await axios.get(`${BASE_URL}/posts?_page=${post.page}&_limit=5&_sort=date&_order=desc`);
     return response.data;
   }
 )
@@ -38,7 +39,7 @@ export const addNewPost = createAsyncThunk(
       date,
       author: { ...user.profile }
     };
-    const response = await axios.post(`http://192.168.1.36:3001/posts`, data);
+    const response = await axios.post(`${BASE_URL}/posts`, data);
     return response.data;
   }
 )
