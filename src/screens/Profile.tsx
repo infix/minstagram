@@ -12,7 +12,7 @@ export const Profile: React.FC = () => {
 
   useEffect(() => { dispatch(getProfile()) }, []);
 
-  if (loading && !error) {
+  if (!profile || loading && !error) {
     return (
       <SafeAreaView>
         <View style={{ alignSelf: "center", justifyContent: "center", height: "100%" }}>
