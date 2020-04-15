@@ -53,10 +53,7 @@ export const NewsFeed = () => {
           </View>
         }
       </ScrollView>
-      <FAB onPress={() => {
-        console.log("Navigation: ", Object.keys(navigation))
-        navigation.navigate("AddPost")
-      }} />
+      <FAB onPress={() => navigation.navigate("AddPost")} />
     </Layout>
   )
 }
