@@ -12,7 +12,7 @@ const getProfile = createAsyncThunk(
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: { error: '', loading: false, profile: {} },
+  initialState: { error: '', loading: false, profile: null },
   reducers: {
     setLoading: (state) => {
       state.loading = true
