@@ -2,8 +2,8 @@ import { ScrollView, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Divider, Icon, Input, Layout, Text } from "@ui-kitten/components";
 import { useDispatch, useSelector } from "react-redux";
-import { addPlace, loadPlaces } from "../slices/bucketListSlice";
-import {SafeAreaView} from "react-native-safe-area-context";
+import { addPlaceAction, loadPlacesAction } from "../slices/bucketListSlice";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const IconPlus = (props: any) =>
   <Icon name={"plus-outline"} {...props} />
@@ -14,15 +14,13 @@ export const BucketList: React.FC = () => {
   // @ts-ignore
   const { places, errorMessage } = useSelector(state => state.bucketList)
 
-  useEffect(() => { dispatch(loadPlaces()) }, [])
+  useEffect(() => { dispatch(loadPlacesAction()) }, [])
 
   const handleAdd = async () => {
-    console.log("Handle add ", place)
     // prevent user from adding empty spaces
     const trimmedPlace = place.trim();
     if (trimmedPlace) {
-      console.log("Dispatching: ", trimmedPlace)
-      dispatch(addPlace({ name: trimmedPlace }))
+      dispatch(addPlaceAction(trimmedPlace))
     }
     setPlace('')
   }

@@ -2,7 +2,7 @@ import { ActivityIndicator, Alert, Image, TouchableOpacity, View } from "react-n
 import React, { useEffect, useState } from "react";
 import { Button, Layout, Select, SelectItem, Text } from "@ui-kitten/components";
 import { useDispatch, useSelector } from "react-redux";
-import { loadPlaces } from "../slices/bucketListSlice";
+import { loadPlacesAction } from "../slices/bucketListSlice";
 import { getProfileAction } from "../slices/userSlice";
 import { addNewPost } from "../slices/postSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -34,7 +34,7 @@ export const AddPost: React.FC = () => {
     // usually this would be handle the by backend
     // but as i'm using json server, I'm just gonna fetch profile
     if (!profile) dispatch(getProfileAction())
-    if (!places.length) dispatch(loadPlaces())
+    if (!places.length) dispatch(loadPlacesAction())
   }, [])
 
   const handleSubmit = () => {

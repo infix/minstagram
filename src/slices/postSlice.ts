@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
-import { removePlace } from "./bucketListSlice";
+import { removePlaceAction } from "./bucketListSlice";
 import { BASE_URL } from "../constants";
 
 const fetchPosts = createAsyncThunk(
@@ -29,7 +29,7 @@ export const addNewPost = createAsyncThunk(
 
     thunkAPI.dispatch(setLoading())
     if (place)
-      thunkAPI.dispatch(removePlace({ name: place }))
+      thunkAPI.dispatch(removePlaceAction(place))
 
     const date = new Date().toISOString();
     const data = {

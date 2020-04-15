@@ -1,71 +1,55 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import { AsyncStorage } from "react-native";
+import { put } from "redux-saga/effects";
 
 const BUCKET_LIST_PLACES = "bucket-list-places";
 
-type addPlaceArgs = { name: string };
-const addPlace = createAsyncThunk(
-  "bucketList/add",
-  async ({ name }: addPlaceArgs) => {
-    const placesString = await AsyncStorage.getItem(BUCKET_LIST_PLACES);
-    const places: string[] = placesString ? JSON.parse(placesString) : [];
+export const addPlaceAction = createAction<string>("bucketList/add")
+export const addPlaceActionFailure = createAction<string>("bucketList/add/failure")
+export const loadPlacesAction = createAction<void>('bucketList/load')
+export const removePlaceAction = createAction<string>("bucketList/remove")
 
-    // throw an error if the place already exists.
-    if (places.includes(name))
-      throw `${name} already exists!`;
+export function* addPlaceSaga(action: { payload: string }) {
+  const name = action.payload;
+  const placesString = yield AsyncStorage.getItem(BUCKET_LIST_PLACES);
+  const places: string[] = placesString ? JSON.parse(placesString) : [];
 
-    // merge places
+  if (places.includes(name)) {
+    yield put(addPlaceActionFailure(`${name} already exists!`));
+  } else {
     const newPlaces = [...places, name];
-
-    await AsyncStorage.setItem(BUCKET_LIST_PLACES, JSON.stringify(newPlaces));
-    return newPlaces;
+    yield AsyncStorage.setItem(BUCKET_LIST_PLACES, JSON.stringify(newPlaces));
+    yield put(setPlaces(newPlaces));
   }
-)
+}
 
-const loadPlaces = createAsyncThunk(
-  "bucketList/load",
-  async () => {
-    const placesString = await AsyncStorage.getItem(BUCKET_LIST_PLACES);
-    // if no places exist create a new list with current place
-    return placesString ? JSON.parse(placesString) : [];
-  }
-)
+export function* loadPlacesSaga() {
+  const placesString = yield AsyncStorage.getItem(BUCKET_LIST_PLACES);
+  yield put(setPlaces(placesString ? JSON.parse(placesString) : []))
+}
 
-export const removePlace = createAsyncThunk(
-  "bucketList/remove",
-  async ({ name }: { name: string }) => {
-    const placesString = await AsyncStorage.getItem(BUCKET_LIST_PLACES);
-    const places: string[] = placesString ? JSON.parse(placesString) : [];
-    const newPlaces = places.filter(place => place !== name)
-    await AsyncStorage.setItem(BUCKET_LIST_PLACES, JSON.stringify(newPlaces));
-    return newPlaces;
-  }
-)
+export function* removePlaceSaga(action: { payload: string }) {
+  const name = action.payload
+  const placesString = yield AsyncStorage.getItem(BUCKET_LIST_PLACES);
+  const places: string[] = placesString ? JSON.parse(placesString) : [];
+  const newPlaces = places.filter(place => place !== name)
+  yield AsyncStorage.setItem(BUCKET_LIST_PLACES, JSON.stringify(newPlaces));
+  yield put(setPlaces(newPlaces));
+}
 
 const bucketListSlice = createSlice({
   name: 'bucketList',
   initialState: { places: [], errorMessage: '' },
-  reducers: {},
-  extraReducers: {
-    [removePlace.fulfilled as any](state, action) {
-      console.log("Removing: ", action.payload)
-      return { ...state, places: action.payload }
-    },
-    // @ts-ignore
-    [loadPlaces.fulfilled](state, action) {
-      return { ...state, places: action.payload }
-    },
-    // @ts-ignore
-    [addPlace.fulfilled](state, action) {
+  reducers: {
+    setPlaces(state, action) {
       return { ...state, places: action.payload, errorMessage: '' }
-    },
-    // @ts-ignore
-    [addPlace.rejected](state, action) {
-      console.log({ action })
-      return { ...state, errorMessage: action.error.message }
     }
+  },
+  extraReducers: (builder: any) => {
+    builder.addCase(addPlaceActionFailure, (state, action) =>
+      ({ ...state, errorMessage: action.payload }))
   }
 });
 
-export { addPlace, loadPlaces };
+const { setPlaces } = bucketListSlice.actions;
 export const bucketListReducer = bucketListSlice.reducer;
