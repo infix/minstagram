@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Layout, Spinner } from "@ui-kitten/components";
-import { fetchPosts, Post as PostType } from "../slices/postSlice";
+import { fetchPostsAction, PostType } from "../slices/postSlice";
 import { Post } from "../components/Post";
 import { isCloseToBottom } from "../utils";
 import { FAB } from "../components/FAB";
@@ -16,11 +16,11 @@ export const NewsFeed = () => {
   const navigation = useNavigation()
   const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (isCloseToBottom(e.nativeEvent, 20) && !loading && !error) {
-      dispatch(fetchPosts())
+      dispatch(fetchPostsAction())
     }
   }, [])
 
-  useEffect(() => { dispatch(fetchPosts()) }, [])
+  useEffect(() => { dispatch(fetchPostsAction()) }, [])
   const handleNavigate = useCallback(() => navigation.navigate("AddPost"), [navigation]);
 
   if (!posts.length && loading) {
@@ -46,7 +46,7 @@ export const NewsFeed = () => {
         {posts.map((post: PostType) => <Post {...post} key={post.id} />)}
         <NewsFeedFooter
           loading={loading} error={error} reachedTheEnd={reachedTheEnd}
-          onRetry={() => dispatch(fetchPosts())}
+          onRetry={() => dispatch(fetchPostsAction())}
         />
       </ScrollView>
 

@@ -4,7 +4,7 @@ import { Button, Layout, Select, SelectItem, Text } from "@ui-kitten/components"
 import { useDispatch, useSelector } from "react-redux";
 import { loadPlacesAction } from "../slices/bucketListSlice";
 import { getProfileAction } from "../slices/userSlice";
-import { addNewPost } from "../slices/postSlice";
+import { addNewPostAction } from "../slices/postSlice";
 import { useNavigation } from "@react-navigation/native";
 
 const images: string[] = [
@@ -45,7 +45,7 @@ export const AddPost: React.FC = () => {
 
     // @ts-ignore
     const place = selectedIndex !== undefined ? places[selectedIndex - 1] : undefined;
-    dispatch(addNewPost({ image: selectedImage, place: place }))
+    dispatch(addNewPostAction({ image: selectedImage, place: place }))
     setPosting(true)
   };
 

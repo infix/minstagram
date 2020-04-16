@@ -1,7 +1,7 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 
 import { authReducer, LoginAction, loginSaga } from "./slices/authSlice";
-import { postReducer } from "./slices/postSlice";
+import { addNewPostAction, addNewPostSaga, fetchPostsAction, fetchPostsSaga, postReducer } from "./slices/postSlice";
 import {
   addPlaceAction,
   addPlaceSaga,
@@ -23,11 +23,13 @@ function* rootSaga() {
   yield takeEvery(loadPlacesAction, loadPlacesSaga);
   yield takeEvery(addPlaceAction, addPlaceSaga);
   yield takeEvery(removePlaceAction, removePlaceSaga);
+  yield takeEvery(fetchPostsAction, fetchPostsSaga);
+  yield takeEvery(addNewPostAction, addNewPostSaga);
 }
 
 export function createStore() {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [...getDefaultMiddleware(/*{ thunk: false }*/), sagaMiddleware]
+  const middlewares = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware]
 
   const store = configureStore({
     reducer: {

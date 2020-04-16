@@ -20,7 +20,7 @@ function* getProfileSaga() {
     const response = yield axios.get(`${BASE_URL}/profile`);
     yield put(getProfileActionSuccess(response.data));
   } catch (e) {
-    yield put(e?.response?.data?.message ?? e)
+    yield put(getProfileActionFailed(e?.response?.data?.message ?? e))
   }
 }
 

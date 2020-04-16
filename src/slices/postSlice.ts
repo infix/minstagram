@@ -1,51 +1,58 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
 import { removePlaceAction } from "./bucketListSlice";
 import { BASE_URL } from "../constants";
+import { put, select } from "redux-saga/effects";
 
-const fetchPosts = createAsyncThunk(
-  "post/fetch",
-  async (args, thunkAPI) => {
-    const { post } = thunkAPI.getState()
-    if (post.loading)
-      throw "loading"
+export const fetchPostsAction = createAction<void>("post/fetch");
+const fetchPostsActionSuccess = createAction<PostType[]>("post/fetch/success");
+const fetchPostsActionFailure = createAction<string>("post/fetch/failure");
 
-    thunkAPI.dispatch(setLoading())
+export function* fetchPostsSaga() {
+  const { post } = yield select()
+  if (post.loading) {
+    yield put(fetchPostsActionFailure("loading"))
+  } else {
+    yield put(setLoading())
 
-    const response = await axios.get(`${BASE_URL}/posts?_page=${post.page}&_limit=5&_sort=date&_order=desc`);
-    return response.data;
+    try {
+      const response = yield axios.get(`${BASE_URL}/posts?_page=${post.page}&_limit=5&_sort=date&_order=desc`);
+      yield put(fetchPostsActionSuccess(response.data));
+    } catch (e) {
+      yield put(fetchPostsActionFailure(e?.response?.data?.message ?? e));
+    }
   }
-)
-
+}
 
 type NewPostArgs = { image: string, place?: string };
-export const addNewPost = createAsyncThunk(
-  "post/new",
-  async ({ image, place }: NewPostArgs, thunkAPI) => {
-    // @ts-ignore
-    const { post, user } = thunkAPI.getState()
-    if (post.loading)
-      throw "loading"
+export const addNewPostAction = createAction<NewPostArgs>("post/new")
+const addNewPostActionSuccess = createAction<PostType>("post/new/success")
+const addNewPostActionFailure = createAction<string>("post/new/failure")
 
-    thunkAPI.dispatch(setLoading())
+export function* addNewPostSaga(action: any) {
+  const { image, place } = action.payload
+  const { post, user } = yield select()
+  if (post.loading) {
+    yield put(addNewPostActionFailure("loading"));
+  } else {
+    yield put(setLoading())
     if (place)
-      thunkAPI.dispatch(removePlaceAction(place))
+      yield put(removePlaceAction(place))
 
-    const date = new Date().toISOString();
-    const data = {
-      id: Math.floor(Math.random() * 1000),
-      image,
-      likes: 0,
-      date,
-      author: { ...user.profile }
-    };
-    const response = await axios.post(`${BASE_URL}/posts`, data);
-    return response.data;
+    try {
+      const date = new Date().toISOString();
+      const id = Math.floor(Math.random() * 1000);
+      const data = { id, image, likes: 0, date, author: user.profile };
+
+      const response = yield axios.post(`${BASE_URL}/posts`, data);
+      yield put(addNewPostActionSuccess(response.data));
+    } catch (e) {
+      yield put(addNewPostActionFailure(e?.response?.data?.message ?? e))
+    }
   }
-)
+}
 
-
-export interface Post {
+export interface PostType {
   id: number,
   author: {
     name: string;
@@ -58,47 +65,38 @@ export interface Post {
 
 const postSlice = createSlice({
   name: 'post',
-  initialState: { posts: [], loading: false, page: 1, error: false, reachedTheEnd: false },
+  initialState: { posts: [] as PostType[], loading: false, page: 1, error: false, reachedTheEnd: false },
   reducers: {
     setLoading: (state) => {
       state.loading = true
     }
   },
-  extraReducers: {
-    // @ts-ignore
-    [addNewPost.fulfilled](state, action) {
-      return {
-        ...state,
-        posts: [action.payload, ...state.posts],
-        loading: false,
-        error: false
-      }
-    },
-    // @ts-ignore
-    [addNewPost.rejected](state, action) {
-      return { ...state, loading: false, error: action.error.message }
-    },
-    // @ts-ignore
-    [fetchPosts.fulfilled]: (state, action) => {
-      return {
-        posts: state.posts.concat(action.payload),
-        loading: false,
-        page: state.page + 1,
-        error: false,
-        reachedTheEnd: action.payload.length === 0
-      }
-    },
-    // @ts-ignore
-    [fetchPosts.rejected]: (state, action) => {
-      // still loading
-      if (action.error.message === "loading")
-        return state;
+  extraReducers: builder => {
+    builder.addCase(addNewPostActionSuccess, (state, action) => ({
+      ...state,
+      posts: [action.payload, ...state.posts],
+      loading: false,
+      error: false
+    }))
 
+    builder.addCase(addNewPostActionFailure, (state, action) =>
+      ({ ...state, loading: false, error: !!action.payload }));
+
+    builder.addCase(fetchPostsActionSuccess, (state, action) => ({
+      posts: state.posts.concat(action.payload),
+      loading: false,
+      page: state.page + 1,
+      error: false,
+      reachedTheEnd: action.payload.length === 0
+    }))
+
+    builder.addCase(fetchPostsActionFailure, (state, action) => {
+      // still loading
+      if (action.payload === "loading") return state;
       return { ...state, loading: false, error: true }
-    }
+    })
   }
 });
 
 const { setLoading } = postSlice.actions;
-export { fetchPosts };
 export const postReducer = postSlice.reducer;

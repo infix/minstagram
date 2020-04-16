@@ -46,7 +46,7 @@ const bucketListSlice = createSlice({
     }
   },
   extraReducers: (builder: any) => {
-    builder.addCase(addPlaceActionFailure, (state, action) =>
+    builder.addCase(addPlaceActionFailure, (state: any, action: { payload: string }) =>
       ({ ...state, errorMessage: action.payload }))
   }
 });

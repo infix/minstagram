@@ -1,5 +1,5 @@
 import React from "react";
-import { Post as PostType } from "../slices/postSlice";
+import { PostType } from "../slices/postSlice";
 import { Image, View } from "react-native";
 
 import { PostHeader } from "./PostHeader";
