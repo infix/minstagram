@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { SignInScreen } from "./src/screens/SignIn";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { createStore } from "./src/store";
 import { NewsFeed } from "./src/screens/NewsFeed";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -60,14 +60,18 @@ const AppTabs = () => (
 
 const RootStack = createStackNavigator();
 
-const RootStackNavigator: React.FC<{ loggedIn: boolean }> = ({ loggedIn }) => (
-  <RootStack.Navigator headerMode="none">
-    {loggedIn ?
-      <RootStack.Screen name="AppTabs" component={AppTabs} /> :
-      <RootStack.Screen name="Sign In" component={AuthStackNavigator} />
-    }
-  </RootStack.Navigator>
-)
+const RootStackNavigator: React.FC<{ loggedIn: boolean }> = ({ loggedIn }) => {
+  // @ts-ignore
+  const isLoggedIn = useSelector(state => state.auth.loggedIn)
+  return (
+    <RootStack.Navigator headerMode="none">
+      {(isLoggedIn || loggedIn) ?
+        <RootStack.Screen name="AppTabs" component={AppTabs} /> :
+        <RootStack.Screen name="Sign In" component={AuthStackNavigator} />
+      }
+    </RootStack.Navigator>
+  );
+}
 
 export default function App() {
   const [loading, setLoading] = useState(true);
